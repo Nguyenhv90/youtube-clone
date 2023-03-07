@@ -1,0 +1,12 @@
+/.idea
+/*/target
+/*/*.iml
+/*.iml
+/.mvn/wrapper
+/fontend/youtube-clone-ui/node_modules
+/fontend/youtube-clone-ui/npm-debug.log
+/fontend/youtube-clone-ui/yarn-error.log
+/fontend/youtube-clone-ui/node
+/fontend/youtube-clone-ui/.vscode
+/mvnw.cmd
+/mvnw
