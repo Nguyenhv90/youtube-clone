@@ -21,7 +21,29 @@
                     <mat-option value="UNLISTED">UNLISTED</mat-option>
                 </mat-select>
             </mat-form-field>
-            <button type="submit" mat-raised-button color="primary">Save</button>
+            <mat-form-field class="example-chip-list" appearance="fill">
+                <mat-label>Tags</mat-label>
+                <mat-chip-grid #chipGrid aria-label="Enter tag">
+                  <mat-chip-row *ngFor="let tag of tags"
+                                (removed)="remove(tag)"
+                                [editable]="true"
+                                (edited)="edit(tag, $event)"
+                                [aria-description]="'press enter to edit ' + tag">
+                    {{tag}}
+                    <button matChipRemove [attr.aria-label]="'remove ' + tag">
+                      <mat-icon>cancel</mat-icon>
+                    </button>
+                  </mat-chip-row>
+                  <input placeholder="Add tag..."
+                         [matChipInputFor]="chipGrid"
+                         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                         [matChipInputAddOnBlur]="addOnBlur"
+                         (matChipInputTokenEnd)="add($event)"/>
+                </mat-chip-grid>
+              </mat-form-field>
+            <div>
+                <button type="submit" mat-raised-button color="primary">Save</button>
+            </div>
         </form>
     </div>
 
