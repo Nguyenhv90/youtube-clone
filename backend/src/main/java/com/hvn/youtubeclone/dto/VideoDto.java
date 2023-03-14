@@ -1,10 +1,7 @@
 package com.hvn.youtubeclone.dto;
 
 import com.hvn.youtubeclone.model.VideoStatus;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
@@ -12,6 +9,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class VideoDto {
     private String id;
     private String title;

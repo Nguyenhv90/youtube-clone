@@ -1,17 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
 import { ActivatedRoute } from '@angular/router';
 import { VideoService } from 'app/video.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { VideoDto } from 'app/video-dto';
 
 @Component({
   selector: 'app-save-video-details',
   templateUrl: './save-video-details.component.html',
   styleUrls: ['./save-video-details.component.css']
 })
-export class SaveVideoDetailsComponent implements OnInit{
+export class SaveVideoDetailsComponent implements OnInit {
 
   saveVideoDetailsForm: FormGroup;
   title: FormControl = new FormControl('');
@@ -20,20 +21,29 @@ export class SaveVideoDetailsComponent implements OnInit{
   addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
   tags: string[] = [];
-  selectedFile!: File ;
+  selectedFile!: File;
   selectedFileName = '';
   fileUploaded = false;
-  videoId = ''
+  videoId = '';
+  videoUrl!: string;
+  thumbnailUrl!: string
 
   constructor(private activatedRoute: ActivatedRoute, private videoService: VideoService,
     private snackBar: MatSnackBar) {
 
     this.videoId = this.activatedRoute.snapshot.params['videoId'];
+
+    //Lấy data video
+    this.videoService.getVideo(this.videoId).subscribe(data => {
+      this.videoUrl = data.videoUrl;
+      this.thumbnailUrl = data.thumbnailUrl;
+    })
+
     this.saveVideoDetailsForm = new FormGroup({
       title: this.title,
       description: this.description,
       videoStatus: this.videoStatus,
-      
+
     })
   }
   ngOnInit(): void {
@@ -44,7 +54,7 @@ export class SaveVideoDetailsComponent implements OnInit{
 
     // Add our fruit
     if (value) {
-      this.tags.push( value);
+      this.tags.push(value);
     }
 
     // Clear the input value
@@ -83,11 +93,23 @@ export class SaveVideoDetailsComponent implements OnInit{
   }
 
   onUpload() {
-    if(this.selectedFile) return;
+    if (this.selectedFile) return;
     this.videoService.uploadThumbnail(this.selectedFile, this.videoId).subscribe(data => {
       console.log(data);
       this.snackBar.open("Thumbnail upload successfull", "OK");
     })
+  }
+
+  saveVideo() {
+    const videoMetaData: VideoDto = {
+      "id": this.videoId,
+      "title": this.saveVideoDetailsForm.get('title')?.value,
+      "description": this.saveVideoDetailsForm.get('description')?.value,
+      "tags": this.tags,
+      "videoStatus": this.saveVideoDetailsForm.get('videoStatus')?.value,
+      "videoUrl": this.videoUrl,
+      "thumbnailUrl": this.thumbnailUrl
+    }
   }
 
 }
